@@ -1,0 +1,6 @@
+# OpenAI API 설정 (코디세이용)
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_BASE_URL=https://api.codisay.com/v1
+
+# 카카오 API 설정
+KAKAO_REST_API_KEY=your_kakao_api_key_here
