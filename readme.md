@@ -31,10 +31,11 @@ pip install -r requirements.txt
 OPENAI_API_KEY=your_openai_api_key_here
 KAKAO_API_KEY=your_kakao_api_key_here
 ```
-프로젝트 루트 폴더에 .env 파일을 생성하고, 본인의 API 키 포함하여 상기 핵심 코드를 작성하세요.
+프로젝트 루트 폴더에 .env 파일을 생성하고, 본인의 API 키 포함하는 핵심 코드를 작성하세요.
 .env(example) 파일의 형식을 참조하면 편리합니다. 
 
 🔒 **보안 주의 사항**
+
 .env 파일은 API 키와 같은 민감한 정보를 담고 있습니다.
 이 파일이 GitHub과 같은 공용 저장소에 업로드되지 않도록 .gitignore 파일에 .env가 포함되어 있는지 반드시 확인하세요.
 실수로 키가 유출되었다면 즉시 해당 서비스 사이트에서 키를 삭제하고 재발급받으세요.
@@ -57,5 +58,17 @@ python main.py --date 2026-11-10
 - .gitignore: GitHub에 올리지 않을 파일 목록 설정
 
 ### 📄 결과물 예시
-실행이 완료되면 results/ 폴더 내에 여행추천_YYYYMMDD_HHMMSS.md 형태로 결과가 저장됩니다.
-상세 샘플은 results/sample_result.md 를 참조하세요.
+- 실행이 완료되면 results/ 폴더 내에 여행추천_YYYYMMDD_HHMMSS.md 형태로 결과가 저장됩니다.(results/sample_result.md 참조)
+
+- 결과물 구조
+  1. 추천 지역 요약(지역명, 추천 이유)
+  2. 날씨 정보
+  3. 행사 / 축제
+  4. 맛집 리스트
+  5. 1일 일정 제안
+  6. 추천 포인트
+
+- 결과물 화면 캡처 (입력/요청: --date 2026-11-10)  
+<img width="1220" height="515" alt="image" src="https://github.com/user-attachments/assets/66f258af-fa46-46d8-9421-eb21922b802d" />
+<img width="1116" height="457" alt="image (1)" src="https://github.com/user-attachments/assets/49a4c594-845e-40fd-b89c-ba4c5c106064" />
+<img width="1092" height="770" alt="image (2)" src="https://github.com/user-attachments/assets/15753043-afad-41d5-bdd8-eb8bbf6a3e82" />
