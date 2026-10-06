@@ -1,5 +1,12 @@
-# API 키 및 환경 변수 (가장 중요!)
+# API 키 및 환경 변수
 .env
+
+# 실행결과 
+results/*
+
+# 단, results 폴더 내 sample_result 파일은 제외(추적함)
+!results/sample_result.md
+!results/sample_result.json
 
 # 파이썬 실행 시 생성되는 임시 파일들
 __pycache__/
