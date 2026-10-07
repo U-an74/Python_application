@@ -3,6 +3,22 @@ import json
 from openai import OpenAI
 from dotenv import load_dotenv
 
+# 검증 함수를 클래스 외부에 독립적으로 정의
+def validate_response(result):
+    """LLM 응답 데이터의 필수 키와 타입을 검증합니다."""
+    required_schema = {
+        "recommended_city": str,
+        "weather": str,
+        "events": list,
+        "reason": str
+    }
+    
+    for key, expected_type in required_schema.items():
+        if key not in result:
+            raise ValueError(f"필수 키 누락: {key}")
+        if not isinstance(result[key], expected_type):
+            raise TypeError(f"데이터 타입 불일치: {key} (기대: {expected_type.__name__})")
+
 load_dotenv()
 class LLMHandler:
     def __init__(self):
@@ -59,6 +75,15 @@ class LLMHandler:
                 content = content[start_idx:end_idx]
 
             result = json.loads(content)
+
+            # 위에서 정의한 검증 함수 호출
+            validate_response(result)
+        
+            # 스키마 검증 로직 추가
+            required_keys = ["recommended_city", "weather", "events", "reason"]
+            if not all(key in result for key in required_keys):
+                raise ValueError(f"필수 키 누락: {set(required_keys) - set(result.keys())}")
+
             return result, None
 
         except Exception as e:

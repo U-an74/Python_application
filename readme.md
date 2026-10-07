@@ -76,6 +76,14 @@ python main.py --help
 - .env: API 키 보안 관리
 - .gitignore: GitHub에 올리지 않을 파일 목록 설정
 
+### 🔌 모듈 간 입출력 명세 (Interface Contracts)
+
+| 모듈 | 주요 함수 | 입력 (Input) | 출력 (Output) |
+| :--- | :--- | :--- | :--- |
+| **LLM Handler** | `get_travel_plan` | `date: str` | `(dict, error)` <br> *dict: {city, weather, events, reason}* |
+| **Kakao Handler** | `search_places` | `city: str, query: str` | `(list, error)` <br> *list: [{name, address, url}, ...]* |
+| **Main** | `main` | `args: Namespace` | `Markdown & JSON Files` |
+
 
 ## 📄 결과물 예시
 - 실행이 완료되면 results/ 폴더 내에 여행추천_YYYYMMDD_HHMMSS.md 형태로 결과가 저장됩니다.(results/sample_result.md 참조)
@@ -125,6 +133,13 @@ python main.py --help
   3. 429 (Too Many Requests): API 호출 할당량(Quota) 초과 여부를 대시보드에서 확인
 - 디버깅 절차: 에러 발생 시 response.status_code와 에러 메시지를 로그로 출력하여 원인을 즉시 파악할 수 있도록 구현
 
+### 4. 데이터 저장 및 관리 규약 (Standardization)
+
+데이터의 체계적인 관리와 신뢰성 확보를 위해 다음과 같은 표준 규약을 적용했습니다.
+
+- **파일명 표준화**: `result_{YYYYMMDD}.md` 및 `raw_{YYYYMMDD}.json` 형식을 채택하여, 사용자가 입력한 여행 날짜별로 데이터를 즉시 식별하고 관리할 수 있도록 설계했습니다.
+- **메타데이터 기록**: 모든 리포트 상단에 `조회 기준 날짜`, `리포트 생성 일시`, `데이터 출처(API)`를 명시하는 메타데이터 섹션을 강제하여 데이터의 이력 관리(Provenance)와 신뢰도를 높였습니다.
+
 
 ## ✅ 운영 및 고도화 전략
 
@@ -147,3 +162,13 @@ python main.py --help
 ### 5. 도시명 정규화 로직
 - **표준화**: 사용자가 입력한 '서울시', '서울역 근처', '부산광역시' 등을 '서울', '부산' 등 표준 지명으로 매핑하는 정규화 과정을 거칩니다.
 - **키워드 정제**: 불필요한 수식어나 오타를 제거하여 카카오 API 검색 성공률을 극대화합니다.
+
+🗺️ **지도 제공자 확장 가이드 (Adapter Design)** 🗺️
+
+본 프로그램은 향후 Google Maps나 Naver Maps로의 교체가 용이하도록 인터페이스를 설계했습니다.
+
+1. **인터페이스 준수**: 새로운 핸들러 작성 시 `search_places(city, query)` 메서드 시그니처를 유지해야 합니다.
+2. **어댑터 패턴 적용**:
+   - `kakao_handler.py`를 참고하여 새로운 `google_handler.py`를 생성합니다.
+   - 반환값은 반드시 `List[Dict[str, str]]` 형태(name, address, url 포함)로 통일합니다.
+3. **교체 방법**: `main.py` 상단의 `from kakao_handler import KakaoHandler`를 `from google_handler import GoogleHandler`로 변경하는 것만으로 즉시 교체가 가능합니다.
