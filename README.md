@@ -86,7 +86,7 @@ python main.py --help
 
 
 ## 📄 결과물
-- 실행이 완료되면 results/ 폴더 내에 [raw_YYYYMMDD.json], [result_YYYYMMDD.md] 형태로 결과가 저장됩니다. (results/sample_result.md 참조)
+- 실행이 완료되면 results/ 폴더 내에 [raw_YYYYMMDD.json], [result_YYYYMMDD.md] 형태로 결과가 저장됩니다. (results/sample 파일 참조)
 
 - 결과물 구조
   1. 메타데이터(기준일, 생성일, 출처)
