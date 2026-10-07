@@ -85,23 +85,29 @@ python main.py --help
 | **Main** | `main` | `args: Namespace` | `Markdown & JSON Files` |
 
 
-## 📄 결과물 예시
-- 실행이 완료되면 results/ 폴더 내에 여행추천_YYYYMMDD_HHMMSS.md 형태로 결과가 저장됩니다.(results/sample_result.md 참조)
+## 📄 결과물
+- 실행이 완료되면 results/ 폴더 내에 [raw_YYYYMMDD.json], [result_YYYYMMDD.md] 형태로 결과가 저장됩니다. (results/sample_result.md 참조)
 
 - 결과물 구조
-  1. 추천 지역 요약(지역명, 추천 이유)
-  2. 날씨 정보
-  3. 행사 / 축제
-  4. 맛집 리스트
-  5. 1일 일정 제안
-  6. 추천 포인트
+  1. 메타데이터(기준일, 생성일, 출처)
+  2. 제목 및 추천 지역 요약(지역명, 추천 이유)
+  3. 날씨 정보
+  4. 행사 / 볼거리
+  5. 맛집 리스트
+  6. 1일 일정 제안(오전, 오후, 저녁)
+  7. 최종 정리(포인트)
 
-- 결과물 화면 캡처 (입력/요청: --date 2026-11-10)  
-<img width="1220" height="515" alt="image" src="https://github.com/user-attachments/assets/66f258af-fa46-46d8-9421-eb21922b802d" />
-<img width="1116" height="457" alt="image (1)" src="https://github.com/user-attachments/assets/49a4c594-845e-40fd-b89c-ba4c5c106064" />
-<img width="1092" height="770" alt="image (2)" src="https://github.com/user-attachments/assets/15753043-afad-41d5-bdd8-eb8bbf6a3e82" />
+- 결과물 화면 캡처
 
+  [JSON]
+  <img width="1337" height="277" alt="image" src="https://github.com/user-attachments/assets/8fe32e9c-fff4-4864-8d9e-561b297eaf22" />
 
+  [Markdown]
+  <img width="1215" height="627" alt="image" src="https://github.com/user-attachments/assets/b5bf35d2-0776-40f3-ac85-18731faff410" />
+  <img width="1215" height="637" alt="image" src="https://github.com/user-attachments/assets/2c5c316a-b7a3-45dc-a697-57c224ec60c3" />
+  <img width="1142" height="567" alt="image" src="https://github.com/user-attachments/assets/2bb87fc7-eb96-49fb-a434-3320873bafb6" />
+
+  
 
 ## 🧠 Technical Insights
 
