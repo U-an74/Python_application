@@ -29,7 +29,7 @@ pip install -r requirements.txt
 ### 3. 환경 변수 설정
 ```bash
 OPENAI_API_KEY=your_openai_api_key_here
-KAKAO_API_KEY=your_kakao_api_key_here
+KAKAO_REST_API_KEY=your_kakao_api_key_here
 ```
 프로젝트 루트 폴더에 .env 파일을 생성하고, 본인의 API 키 포함하는 핵심 코드를 작성하세요.
 .env(example) 파일의 형식을 참조하면 편리합니다. 
@@ -40,14 +40,30 @@ KAKAO_API_KEY=your_kakao_api_key_here
 이 파일이 GitHub과 같은 공용 저장소에 업로드되지 않도록 .gitignore 파일에 .env가 포함되어 있는지 반드시 확인하세요.
 실수로 키가 유출되었다면 즉시 해당 서비스 사이트에서 키를 삭제하고 재발급받으세요.
 
-### 4. 프로그램 실행
-```bash
-# 기본 실행
-python main.py
+### 4. 프로그램 실행(Usage)
 
-# 특정 날짜 지정 실행 (옵션)
+이 프로그램은 명령행 인터페이스(CLI)를 통해 실행됩니다. `-d` 또는 `--date` 옵션을 사용하여 여행 날짜를 지정해야 합니다.
+
+
+```bash
+# 기본 실행 형식
+python main.py --date YYYY-MM-DD
+
+# 실행 예시-1(기본)
 python main.py --date 2026-11-10
+
+# 실행 예시-2(짧은 별칭 옵션)
+python main.py -d 2026-11-10
 ```
+
+❔**자동 안내 기능** 
+
+옵션이 기억나지 않는 경우, 아래 명령어를 통해 도움말을 확인할 수 있습니다. 
+
+```bash
+python main.py --help
+```
+
 ## 📂 프로젝트 구조
 - main.py: 프로그램 실행 메인 로직
 - llm_handler.py: OpenAI API 연동 및 프롬프트 관리

@@ -15,7 +15,8 @@ def validate_date(date_str):
 def main():
     # 1. CLI 인자 설정
     parser = argparse.ArgumentParser(description="국내 여행지 추천 및 맛집 검색 프로그램")
-    parser.add_argument("-date", required=True, help="여행 날짜 (YYYY-MM-DD)")
+    # -d와 --date 둘 다 사용할 수 있게 변경
+    parser.add_argument("-d", "--date", required=True, help="여행 날짜를 입력하세요 (형식: YYYY-MM-DD)")
     args = parser.parse_args()
 
     # 2. 날짜 검증
