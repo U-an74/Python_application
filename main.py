@@ -5,6 +5,14 @@ from datetime import datetime
 from llm_handler import LLMHandler
 from kakao_handler import KakaoHandler
 
+
+def check_cache(date):
+    cache_path = f"results/cache_{date}.json"
+    if os.path.exists(cache_path):
+        print("캐시된 데이터를 사용합니다.")
+        return True
+    return False
+
 def validate_date(date_str):
     """YYYY-MM-DD 형식 검증"""
     try:

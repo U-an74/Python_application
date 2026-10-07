@@ -4,14 +4,13 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
-
 class LLMHandler:
     def __init__(self):
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        # JSON 모드 없이 진행
-        self.model = "gpt-5.4"
+        self.model = "gpt-5.4" 
 
     def get_initial_recommendation(self, date, retry_count=0):
+        # 1. 기본 시스템 프롬프트
         system_prompt = (
             "당신은 한국 여행 전문가입니다. 반드시 다음 JSON 형식을 지켜서 답변하세요. "
             "다른 설명은 하지 말고 오직 JSON 데이터만 출력하세요.\n"
@@ -25,6 +24,19 @@ class LLMHandler:
         
         user_prompt = f"{date}에 한국에서 여행하기 좋은 도시를 하나 추천해줘."
 
+        # --- 보안/보강 로직 추가 ---
+        if retry_count > 0:
+            # 재시도 시 시스템 프롬프트에 강력한 경고 문구 추가
+            system_prompt += (
+                "\n\n⚠️ 주의: 이전 응답에서 JSON 파싱 오류가 발생했습니다. "
+                "절대로 서론이나 결론을 쓰지 마세요. "
+                "마크다운 코드 블록(```json)도 사용하지 말고, "
+                "오직 중괄호 '{' 로 시작해서 '}' 로 끝나는 JSON 데이터만 보내주세요."
+            )
+            # 유저 프롬프트도 더 명확하게 보강
+            user_prompt = f"{date} 여행지 추천을 '순수 JSON 데이터'로만 다시 응답해줘."
+        # ------------------------------------------
+
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -32,25 +44,30 @@ class LLMHandler:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ]
-                # response_format 옵션을 제거하여 호환성을 높였습니다.
             )
             
             content = response.choices[0].message.content.strip()
             
-            # LLM이 만약 ```json ... ``` 형태로 답했을 경우를 대비해 정제합니다.
+            # JSON 정제 로직 (보정 규칙)
             if content.startswith("```"):
                 content = content.replace("```json", "").replace("```", "").strip()
             
+            # 만약 JSON 앞뒤에 불필요한 문구가 붙어있을 경우를 대비한 최소한의 보정
+            start_idx = content.find('{')
+            end_idx = content.rfind('}') + 1
+            if start_idx != -1 and end_idx != 0:
+                content = content[start_idx:end_idx]
+
             result = json.loads(content)
             return result, None
 
         except Exception as e:
             if retry_count < 1:
-                print(f"LLM 파싱 실패. 재시도 중... ({e})")
+                print(f"LLM 파싱 실패. 보강된 프롬프트로 재시도 중... ({e})")
                 return self.get_initial_recommendation(date, retry_count + 1)
             else:
                 return None, f"LLM 추천 생성 실패: {str(e)}"
-
+            
     def generate_final_report(self, plan_data, restaurants):
         system_prompt = "제공된 정보를 바탕으로 깔끔하고 친절한 여행 리포트를 Markdown 형식으로 작성하세요."
         

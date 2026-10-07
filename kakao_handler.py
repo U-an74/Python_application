@@ -5,6 +5,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class KakaoHandler:
+    def normalize_city_name(self, city_name):
+    # '서울시' -> '서울', '부산광역시' -> '부산' 등 정제
+        suffixes = ['시', '군', '구', '광역시', '특별자치시']
+        for s in suffixes:
+            city_name = city_name.replace(s, "").strip()
+        return city_name
+
     def __init__(self):
         self.api_key = os.getenv("KAKAO_REST_API_KEY")
         self.base_url = "https://dapi.kakao.com/v2/local/search/keyword.json"
@@ -24,6 +31,7 @@ class KakaoHandler:
         }
 
         try:
+            # 장소 검색은 데이터 조회가 목적이므로 GET 메서드를 사용함
             response = requests.get(self.base_url, headers=headers, params=params)
             
             # 인증/권한 오류(401, 403) 등을 포함한 HTTP 에러 체크
@@ -33,6 +41,22 @@ class KakaoHandler:
             data = response.json()
             documents = data.get("documents", [])
             
+            # 검색 결과 0건 발생 시 대체 검색 전략 추가
+            if not documents:
+                print(f"⚠️ '{query}' 검색 결과가 0건입니다. 대체 키워드로 재검색합니다.")
+            
+                # 1. 통계/로깅 (파일에 기록하여 나중에 분석 가능하게 함)
+                with open("search_stats.log", "a", encoding="utf-8") as f:
+                    f.write(f"[FAIL] Query: {query} / City: {city_name}\n")
+            
+                # 2. 대체 키워드 설정 (예: '맛집' 대신 '여행지'나 '명소'로 확장)
+                fallback_query = f"{self.normalize_city_name(city_name)} 명소"
+            
+                # 3. 재호출 (간단하게 구현하기 위해 다시 한 번 호출)
+                params['query'] = fallback_query
+                response = requests.get(self.base_url, headers=headers, params=params)
+                documents = response.json().get('documents', [])
+
             # 결과가 0건이어도 프로그램은 중단되지 않음
             results = []
             for doc in documents:
